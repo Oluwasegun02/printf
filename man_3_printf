@@ -1,68 +1,69 @@
-_PRINTF(3)
+.TH man 3 "18 October 2022" "0.10" "_printf man page"
+.SH NAME
+.B _printf
+- Formatted output conversion.
+.SH SYNOPSIS
+.B #include "main.h"
 
-NAME
-	_printf - prints supplied string with certain operators for substitution and formatting
+.B int _printf(const char *
+.I format
+.B , ...)
+.SH DESCRIPTION
+.B _printf()
+Prints to standard output under the control of a 
+.I format
+string that specifies how subsequent arguments are converted for output. 
+.SH Return value
+On successful return, these functions return the number of characters printed, excluding the null byte used to end output to strings.
 
-SYNOPSIS
-	_printf FORMAT [ARGUMENTS] ...
+If an output error is encountered, a negative value is returned.
+.SH Format of the format string
+The format string is composed of 0 or more directives (ordinary characters that are not %), which are copied to the output stream. The format string is also composed of conversion specifications, each of which result in fetching zero or more subsequent arguments. Each conversion specification is introduced by the character % and ends with the conversion specifier.
+The argument must correspond properly with the conversion specifier. By default, the arguments are used in the order given.
+.SH The conversion specifier
+A character that specifies the type of conversion to be applied. The conversion specifiers and their meanings are:
+.TP
+.BR c
+The int argument is converted to an unsigned char, then the resulting character is written
+.TP
+.B s
+The const char * argument is expected to be a pointer to an array of character type (pointer to a string). Characters from the array are written up to a terminating null byte, but do ot include the terminating null byte.
+.TP
+.B S
+Prints a string. Non printable characters are printed as "\x" followed by their ASCII values in two digit hexadecimal
+.TP
+.B d, i
+The int argument is converted to signed decimal notation.
+.TP
+.B x, X
+The unsigned int argument is converted to unsigned lowercase hexadecimal notation(x), or unsigned uppercase hexadecimal notation(X).
+.TP
+.B u
+The unsigned int argument is converted to unsigned decimal notation
+.TP
+.B o, b
+The unsigned int argument is converted to unsigned octal notation(o) or binary notation(b).
+.TP
+.B p
+Address is printed in hexadecimal.
+.TP
+.B r
+Prints a string in reverse.
+.TP
+.B R
+Prints a string converted to rot13
+.TP
+.B %
+A '%' is written but no argument is converted. The complete version specification is '%%'
+.SH EXAMPLE
+To print the day of the year, where weekday and month are pointers to strings and day and year are integers:
 
-DESCRIPTION
-        Print ARGUMENT(s) according to OPTION within the supplied FORMAT string
+#include "main.h"
 
-	    FORMAT controls the output to STDOUT including OPERATORS
- ENVIROMENT
- \" .Bl -tag -width "ENV_VAR_1" -indent \" ENV_VAR_1 is width of the string ENV_VAR_1
-.\" .It Ev ENV_VAR_1
-.\" Description of ENV_VAR_1
-.\" .It Ev ENV_VAR_2
-.\" Description of ENV_VAR_2
-.\" .El
-.Sh Conversion specifiers                \" File used or created by the topic of the man page
-.Bl -tag -width "/Users/joeuser/Library/really_long_file_name" -compact
-.It d i \"-a flag as a list item
-The int argument is converted to signed decimal notation. The precision, if any, gives the 
-minimum number of digits that must appear; if the converted value requires fewer digits, 
-it is padded on the left with zeros.  The default precision is 1.  When 0 is printed with 
-an explicit precision 0, the output is empty.
-.It o, u, x, X
-(ell) A following integer conversion corresponds to a long or unsigned long argument, 
-or a following n conversion corresponds to a pointer to a long argument, or a following 
-c conversion corresponds to a wint_t argument, or a following s conversion corresponds 
-to a pointer to wchar_t argument.
-.It S
-Non printable characters (0 < ASCII value < 32 or >= 127) are printed this way: \x, 
-followed by the ASCII code value in hexadecimal (upper case - always 2 characters).
-.It c
-print char.
-.It o, u, x, X
-(Not in C99 or C11, but in SUSv2, SUSv3, and SUSv4.) Synonym for ls.  Don't use.
-.It  %
-A '%' is written.  No argument is converted.  The complete conversion specification is '%%'.
-.El                      \" Ends the list
-.\" .Sh DIAGNOSTICS       \" May not be needed
-.\" .Bl -diag
-.\" .It Diagnostic Tag
-.\" Diagnostic informtion here.
-.\" .It Diagnostic Tag
-.\" Diagnostic informtion here.
-
-EXAMPLES
-	#include "main.h"
-
-int main()
-
-{
-
-_printf("Hello world, I'm a %s", "segzy");
-
-return (0);
-
-}
-
-Hello world, I'm a segzy
-
-REPORTING BUGS
-    Report _printf bugs to https://github.com/Oluwasegun02/printf.git   
-
-AUTHORS
-	Made by Oluwasegun Ogunniyi and Emmanuel Akinduyo
+_printf("%s, %s %d, %d\\n", weekday, month, day, year);
+.SH SEE ALSO
+.I printf(3)
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Oluwasegun Ogunniyi, Emmanuel Akinduyo
